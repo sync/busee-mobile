@@ -1,0 +1,27 @@
+{
+  "experimentalTailwindcss": {
+    "functions": ["cx"],
+    "attributes": ["className"]
+  },
+  "experimentalSortImports": {},
+  "singleQuote": true,
+  "printWidth": 80,
+  "experimentalSortPackageJson": {},
+  "ignorePatterns": [
+    "**/node_modules/",
+    "**/.turbo",
+    "**/.yarn",
+    "**/coverage/",
+    "patches/",
+    "ios",
+    "android",
+    "vendor",
+    ".expo",
+    "expo-env.d.ts",
+    ".watchmanconfig",
+    ".claude",
+    ".agents",
+    ".codex",
+    "uniwind-types.d.ts"
+  ]
+}
