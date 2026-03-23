@@ -3084,6 +3084,38 @@ expo-constants@56.0.0-canary-20260305-5163746:
     "@expo/config" "56.0.0-canary-20260305-5163746"
     "@expo/env" "2.1.2-canary-20260305-5163746"
 
+expo-dev-client@56.0.0-canary-20260305-5163746:
+  version "56.0.0-canary-20260305-5163746"
+  resolved "https://registry.yarnpkg.com/expo-dev-client/-/expo-dev-client-56.0.0-canary-20260305-5163746.tgz#ecb5a5ed0a4cca59705c60b473964b16e3d766e0"
+  integrity sha512-ClcnJaIi85LvcvgS2J12FYJ/QZFa8fOq+dyDL+D/PiBkQ1pdLCIKM5TQxsfNrv6DqhN0dTcy08ADhyMWDXxDHQ==
+  dependencies:
+    expo-dev-launcher "56.0.0-canary-20260305-5163746"
+    expo-dev-menu "56.0.0-canary-20260305-5163746"
+    expo-dev-menu-interface "56.0.0-canary-20260305-5163746"
+    expo-manifests "56.0.0-canary-20260305-5163746"
+    expo-updates-interface "56.0.0-canary-20260305-5163746"
+
+expo-dev-launcher@56.0.0-canary-20260305-5163746:
+  version "56.0.0-canary-20260305-5163746"
+  resolved "https://registry.yarnpkg.com/expo-dev-launcher/-/expo-dev-launcher-56.0.0-canary-20260305-5163746.tgz#77d5747fde96c1561bd2baa1992d2d0c0bbc53ad"
+  integrity sha512-PgClYrVJ3BYvetx44tH7jsbAy2L8aEDNU8a6GtpaIrtgIlpXOv+p1RpyFjnCEmetmwYYG1jr5IICMCQEp3yMeA==
+  dependencies:
+    "@expo/schema-utils" "56.0.0-canary-20260305-5163746"
+    expo-dev-menu "56.0.0-canary-20260305-5163746"
+    expo-manifests "56.0.0-canary-20260305-5163746"
+
+expo-dev-menu-interface@56.0.0-canary-20260305-5163746:
+  version "56.0.0-canary-20260305-5163746"
+  resolved "https://registry.yarnpkg.com/expo-dev-menu-interface/-/expo-dev-menu-interface-56.0.0-canary-20260305-5163746.tgz#439e3da3a29a3cfed0fd172bffa63bf86cbce765"
+  integrity sha512-l3aW5y0EMCol8sHVHABg718p+R5uTPCvKwFjdVQ9pFGRs/M1WltkjlbP/1ll6FVoovs44A+psrptKxC37UrCtA==
+
+expo-dev-menu@56.0.0-canary-20260305-5163746:
+  version "56.0.0-canary-20260305-5163746"
+  resolved "https://registry.yarnpkg.com/expo-dev-menu/-/expo-dev-menu-56.0.0-canary-20260305-5163746.tgz#7031171d0308af5f89e516e7021a7dbf76eb3a2a"
+  integrity sha512-Oq+JEe/Emg3Xotp9Bssue39sKkuNZD2qcKMj0YMdAtKq3AwAMht0HITrsZ9gbRwqEg4ohrJgt6s8E3kkbyDLeg==
+  dependencies:
+    expo-dev-menu-interface "56.0.0-canary-20260305-5163746"
+
 expo-file-system@56.0.0-canary-20260305-5163746:
   version "56.0.0-canary-20260305-5163746"
   resolved "https://registry.yarnpkg.com/expo-file-system/-/expo-file-system-56.0.0-canary-20260305-5163746.tgz#32d920dadd6f62a02b3cfe45ea53e67f350c37fc"
@@ -3096,10 +3128,23 @@ expo-font@56.0.0-canary-20260305-5163746:
   dependencies:
     fontfaceobserver "^2.1.0"
 
+expo-json-utils@56.0.0-canary-20260305-5163746:
+  version "56.0.0-canary-20260305-5163746"
+  resolved "https://registry.yarnpkg.com/expo-json-utils/-/expo-json-utils-56.0.0-canary-20260305-5163746.tgz#d93b11bbc916a13cd63fa7b7fe57325a744023ba"
+  integrity sha512-sQpowOqAZISJtpzk0U5FnIie/Aiw7zYJSdVYLKXDBA5p+VhDbfo3BkpRT21XPwEXL0P8J/Qdq7CA51Jp+rDtfA==
+
 expo-keep-awake@56.0.0-canary-20260305-5163746:
   version "56.0.0-canary-20260305-5163746"
   resolved "https://registry.yarnpkg.com/expo-keep-awake/-/expo-keep-awake-56.0.0-canary-20260305-5163746.tgz#e93e0d60b7d1461f0ea37a626c8aa0792ce3f11f"
   integrity sha512-TKvOFWae3e+/6XZ/w0BuLyq+zTBstxnUIOtYNsq7YJEYl8TovC3k1TaLR6uoWTHTCuLucrwKpyf1tUJ9IzOMzA==
+
+expo-manifests@56.0.0-canary-20260305-5163746:
+  version "56.0.0-canary-20260305-5163746"
+  resolved "https://registry.yarnpkg.com/expo-manifests/-/expo-manifests-56.0.0-canary-20260305-5163746.tgz#7b537d4ec169c62fe34419f9d3e0f01835d86656"
+  integrity sha512-9O1VuKeLVd6kPa1l+PKSUnk9CBZy6L1SPDhUuim4R5yMC3V5bbx1U6UnsckR7+PTlZC2SUNUb2btxi4/GyB8bw==
+  dependencies:
+    "@expo/config" "56.0.0-canary-20260305-5163746"
+    expo-json-utils "56.0.0-canary-20260305-5163746"
 
 expo-modules-autolinking@56.0.0-canary-20260305-5163746:
   version "56.0.0-canary-20260305-5163746"
@@ -3123,12 +3168,32 @@ expo-server@56.0.0-canary-20260305-5163746:
   resolved "https://registry.yarnpkg.com/expo-server/-/expo-server-56.0.0-canary-20260305-5163746.tgz#b336654477d47c6a9c84a484988302d884b5a0ed"
   integrity sha512-nY3poj52HSV8f6uhW543ZbAM8q/7k8gVBppl1wcRHDbWT6mGr/O8iqA7Dwxoy002kQfPq3DQcA00qtXkrS4BbQ==
 
+expo-splash-screen@56.0.0-canary-20260305-5163746:
+  version "56.0.0-canary-20260305-5163746"
+  resolved "https://registry.yarnpkg.com/expo-splash-screen/-/expo-splash-screen-56.0.0-canary-20260305-5163746.tgz#5d3573813ef2cc2e9a66a6028eda385ffb2bc370"
+  integrity sha512-4X1LpRA6t9DsrEPdluBImis72NaaNR7bbBIWoTY2vvMwmtM8BxF7mpfs7Ei9P7wItrjiZfH9fsjMdozxZVbnVQ==
+  dependencies:
+    "@expo/prebuild-config" "56.0.0-canary-20260305-5163746"
+
 expo-status-bar@56.0.0-canary-20260305-5163746:
   version "56.0.0-canary-20260305-5163746"
   resolved "https://registry.yarnpkg.com/expo-status-bar/-/expo-status-bar-56.0.0-canary-20260305-5163746.tgz#cdcc5d7498e73f62274a029f253e2425304e4438"
   integrity sha512-AYilZyzZ6fATtip8YtQ4IvACI7U7rytTnzJlx1OaRvvg7a7k2ARi1fA7NQCoAuciAAVZGQaYp1LSYXp9134HaA==
   dependencies:
     react-native-is-edge-to-edge "^1.2.1"
+
+expo-system-ui@56.0.0-canary-20260305-5163746:
+  version "56.0.0-canary-20260305-5163746"
+  resolved "https://registry.yarnpkg.com/expo-system-ui/-/expo-system-ui-56.0.0-canary-20260305-5163746.tgz#1f7d7d9c239c457b0f1eaf1fbbdaa6e666db5ae2"
+  integrity sha512-Izx3DuVrErVFc2Tv299+1l6brsNsh6Cn9uVdm8n2Na5H8sF87T+FsuvgTpQSQB8d+nkWeFg91+3eWO3wQdZgBw==
+  dependencies:
+    "@react-native/normalize-colors" "0.84.1"
+    debug "^4.3.2"
+
+expo-updates-interface@56.0.0-canary-20260305-5163746:
+  version "56.0.0-canary-20260305-5163746"
+  resolved "https://registry.yarnpkg.com/expo-updates-interface/-/expo-updates-interface-56.0.0-canary-20260305-5163746.tgz#82b80586cc6dafe3969303674380b284a937911c"
+  integrity sha512-Epr9zE/D9FENH5ciq80Xw6a/TO3vgzsD/iMvtrtP3oZqwnL35FLyoH3qcIc071n/taw5IHDg55ArLMHh7QlYKg==
 
 expo@56.0.0-canary-20260305-5163746:
   version "56.0.0-canary-20260305-5163746"
