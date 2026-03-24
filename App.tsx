@@ -1,13 +1,7 @@
-import {
-  QueryClient,
-  QueryClientProvider,
-  useQuery,
-} from '@tanstack/react-query';
+import { ConvexProvider } from 'convex/react';
 import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
 import {
   ActivityIndicator,
-  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -15,78 +9,25 @@ import {
   View,
 } from 'react-native';
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 1,
-      staleTime: 30 * 1000,
-      gcTime: 5 * 60 * 1000,
-    },
-  },
-});
+import { api } from './convex/_generated/api';
+import { convex, useQueryWithStatus } from './lib/convex';
 
-const TRACKER_QUERY_KEY = ['altona-tracker'];
-const TRACKER_URL = 'https://busee-production.up.railway.app/scrape-altona';
+function formatUpdatedTime(timestamp: number | undefined) {
+  if (timestamp === undefined) {
+    return 'Waiting for the first successful refresh...';
+  }
 
-type BusStop = {
-  destination: string;
-  stops: string;
-  time: string;
-};
+  return `Updated ${new Date(timestamp).toLocaleTimeString([], {
+    hour: 'numeric',
+    minute: '2-digit',
+  })}`;
+}
 
 function AppContent() {
   const { width } = useWindowDimensions();
-  const [lastUpdatedAt, setLastUpdatedAt] = useState<string | null>(null);
-
-  const { data, error, isPending, isFetching, refetch } = useQuery({
-    queryKey: TRACKER_QUERY_KEY,
-    queryFn: async () => {
-      const response = await fetch(TRACKER_URL, {
-        cache: 'no-store',
-        headers: {
-          'Cache-Control': 'no-cache',
-          Pragma: 'no-cache',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`Tracker request failed (${response.status})`);
-      }
-
-      const payload: unknown = await response.json();
-
-      if (!Array.isArray(payload) || payload.length === 0) {
-        throw new Error('Tracker payload was empty');
-      }
-
-      const firstStop = payload[0];
-
-      if (
-        typeof firstStop !== 'object' ||
-        firstStop === null ||
-        typeof firstStop.destination !== 'string' ||
-        typeof firstStop.stops !== 'string' ||
-        typeof firstStop.time !== 'string'
-      ) {
-        throw new Error('Tracker payload shape changed');
-      }
-
-      setLastUpdatedAt(
-        new Date().toLocaleTimeString([], {
-          hour: 'numeric',
-          minute: '2-digit',
-        }),
-      );
-
-      return firstStop satisfies BusStop;
-    },
-  });
+  const tracker = useQueryWithStatus(api.tracker.getAltonaLatest);
 
   const compactLayout = width < 390;
-
-  const handleRefresh = () => {
-    void refetch();
-  };
 
   return (
     <View style={styles.appShell}>
@@ -112,44 +53,43 @@ function AppContent() {
                 Next departure
               </Text>
               <Text selectable style={styles.updatedMeta}>
-                {isFetching
-                  ? 'Refreshing from network...'
-                  : `Updated ${lastUpdatedAt ?? 'just now'}`}
+                {tracker.isPending
+                  ? 'Connecting to Convex...'
+                  : tracker.isError
+                    ? 'Unable to read tracker data.'
+                    : formatUpdatedTime(tracker.data?.lastSucceededAt)}
+              </Text>
+              <Text selectable style={styles.autoRefreshMeta}>
+                Auto-refreshes every minute
               </Text>
             </View>
-            <Pressable
-              accessibilityHint="Refreshes the live tracker data from the network."
-              accessibilityLabel="Refresh tracker"
-              accessibilityRole="button"
-              disabled={isFetching}
-              onPress={handleRefresh}
-              style={({ pressed }) => [
-                styles.refreshButton,
-                isFetching ? styles.refreshButtonDisabled : null,
-                pressed ? styles.refreshButtonPressed : null,
-              ]}
-            >
-              <Text selectable={false} style={styles.refreshSymbol}>
-                ↻
-              </Text>
-            </Pressable>
           </View>
 
           <View style={styles.card}>
-            {isPending ? (
+            {tracker.isPending ? (
               <View style={styles.loadingState}>
                 <ActivityIndicator color="#0f172a" size="small" />
                 <Text selectable style={styles.loadingText}>
-                  Pulling the latest bus timing...
+                  Loading the latest saved departure...
                 </Text>
               </View>
-            ) : error instanceof Error ? (
+            ) : tracker.isError ? (
               <View style={styles.errorState}>
                 <Text selectable style={styles.errorLabel}>
                   Unable to load tracker
                 </Text>
                 <Text selectable style={styles.errorMessage}>
-                  {error.message}
+                  {tracker.error.message}
+                </Text>
+              </View>
+            ) : tracker.data === null ? (
+              <View style={styles.emptyState}>
+                <Text selectable style={styles.emptyLabel}>
+                  Waiting for tracker data
+                </Text>
+                <Text selectable style={styles.emptyMessage}>
+                  Convex is connected, but the first successful refresh has not
+                  landed yet.
                 </Text>
               </View>
             ) : (
@@ -160,7 +100,7 @@ function AppContent() {
                       Due
                     </Text>
                     <Text selectable style={styles.timeValue}>
-                      {data.time}
+                      {tracker.data.time}
                     </Text>
                   </View>
                   <View style={styles.statusPill}>
@@ -179,7 +119,7 @@ function AppContent() {
                       Destination
                     </Text>
                     <Text selectable style={styles.detailValue}>
-                      {data.destination}
+                      {tracker.data.destination}
                     </Text>
                   </View>
                   <View style={styles.detailCard}>
@@ -187,10 +127,19 @@ function AppContent() {
                       Service pattern
                     </Text>
                     <Text selectable style={styles.detailValue}>
-                      {data.stops}
+                      {tracker.data.stops}
                     </Text>
                   </View>
                 </View>
+
+                {tracker.data.lastError ? (
+                  <View style={styles.noticeCard}>
+                    <Text selectable style={styles.noticeText}>
+                      Showing the most recent successful result. Latest refresh
+                      failed: {tracker.data.lastError}
+                    </Text>
+                  </View>
+                ) : null}
               </>
             )}
           </View>
@@ -202,9 +151,9 @@ function AppContent() {
 
 export default function App() {
   return (
-    <QueryClientProvider client={queryClient}>
+    <ConvexProvider client={convex}>
       <AppContent />
-    </QueryClientProvider>
+    </ConvexProvider>
   );
 }
 
@@ -271,27 +220,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 20,
   },
-  refreshButton: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 52,
-    width: 52,
-    borderRadius: 18,
-    borderCurve: 'continuous',
-    backgroundColor: '#f9d89c',
-    boxShadow: '0 12px 28px rgba(249, 216, 156, 0.28)',
-    alignSelf: 'flex-start',
-  },
-  refreshButtonDisabled: {
-    opacity: 0.72,
-  },
-  refreshButtonPressed: {
-    transform: [{ scale: 0.96 }],
-  },
-  refreshSymbol: {
-    color: '#0f172a',
-    fontSize: 24,
-    fontWeight: '700',
+  autoRefreshMeta: {
+    color: '#8eb1c7',
+    fontSize: 13,
+    lineHeight: 18,
   },
   card: {
     gap: 20,
@@ -314,6 +246,9 @@ const styles = StyleSheet.create({
   errorState: {
     gap: 10,
   },
+  emptyState: {
+    gap: 10,
+  },
   errorLabel: {
     color: '#8a2d1e',
     fontSize: 18,
@@ -321,6 +256,16 @@ const styles = StyleSheet.create({
   },
   errorMessage: {
     color: '#5f3a30',
+    fontSize: 15,
+    lineHeight: 22,
+  },
+  emptyLabel: {
+    color: '#20445a',
+    fontSize: 18,
+    fontWeight: '700',
+  },
+  emptyMessage: {
+    color: '#506573',
     fontSize: 15,
     lineHeight: 22,
   },
@@ -395,5 +340,16 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '700',
     lineHeight: 28,
+  },
+  noticeCard: {
+    borderRadius: 20,
+    borderCurve: 'continuous',
+    backgroundColor: '#fff2e2',
+    padding: 16,
+  },
+  noticeText: {
+    color: '#7d4e16',
+    fontSize: 14,
+    lineHeight: 20,
   },
 });

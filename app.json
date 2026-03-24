@@ -4,14 +4,14 @@
     "slug": "busee",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.dblechoc.busee",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
-      }
+      },
+      "icon": "./assets/app.icon"
     },
     "android": {
       "adaptiveIcon": {
@@ -30,7 +30,7 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#ffffff",
+          "backgroundColor": "#f5efe3",
           "image": "./assets/splash-icon.png",
           "imageWidth": 200
         }
