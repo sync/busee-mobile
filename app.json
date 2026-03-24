@@ -28,13 +28,52 @@
     },
     "plugins": [
       [
+        "expo-build-properties",
+        {
+          "ios": {
+            "deploymentTarget": "26.0"
+          }
+        }
+      ],
+      [
+        "voltra",
+        {
+          "groupIdentifier": "group.com.dblechoc.busee",
+          "widgets": [
+            {
+              "id": "next_departure",
+              "displayName": "Next Departure",
+              "description": "Shows the latest saved Altona departure",
+              "supportedFamilies": ["systemMedium", "systemLarge"],
+              "initialStatePath": "./widgets/departure-widget-ios-initial.tsx"
+            }
+          ],
+          "android": {
+            "widgets": [
+              {
+                "id": "next_departure",
+                "displayName": "Next Departure",
+                "description": "Shows the latest saved Altona departure",
+                "minCellWidth": 4,
+                "minCellHeight": 2,
+                "targetCellWidth": 4,
+                "targetCellHeight": 2,
+                "resizeMode": "none",
+                "initialStatePath": "./widgets/departure-widget-android-initial.tsx"
+              }
+            ]
+          }
+        }
+      ],
+      [
         "expo-splash-screen",
         {
           "backgroundColor": "#f5efe3",
           "image": "./assets/splash-icon.png",
           "imageWidth": 200
         }
-      ]
+      ],
+      "expo-build-properties"
     ],
     "extra": {
       "eas": {

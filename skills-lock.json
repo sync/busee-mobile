@@ -110,6 +110,11 @@
       "source": "vercel-labs/agent-skills",
       "sourceType": "github",
       "computedHash": "2e9088a7333666d8c2833b8ff58bd51b955501c42b4c7244f72b4cbf22dafcc4"
+    },
+    "voltra": {
+      "source": "callstackincubator/voltra",
+      "sourceType": "github",
+      "computedHash": "c43219a9d79c198ec48c463bc7ff8ed9d069085e0926419ab0acb6bdf8fc79c3"
     }
   }
 }

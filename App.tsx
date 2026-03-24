@@ -1,5 +1,6 @@
 import { ConvexProvider } from 'convex/react';
 import { StatusBar } from 'expo-status-bar';
+import { useEffect } from 'react';
 import {
   ActivityIndicator,
   ScrollView,
@@ -11,6 +12,11 @@ import {
 
 import { api } from './convex/_generated/api';
 import { convex, useQueryWithStatus } from './lib/convex';
+import {
+  initialDepartureWidgetState,
+  type DepartureWidgetState,
+} from './widgets/departure-widget-state';
+import { syncDepartureWidgets } from './widgets/departure-widget-sync';
 
 function formatUpdatedTime(timestamp: number | undefined) {
   if (timestamp === undefined) {
@@ -28,6 +34,54 @@ function AppContent() {
   const tracker = useQueryWithStatus(api.tracker.getAltonaLatest);
 
   const compactLayout = width < 390;
+  const updatedMetaText = tracker.isPending
+    ? 'Connecting to Convex...'
+    : tracker.isError
+      ? 'Unable to read tracker data.'
+      : formatUpdatedTime(tracker.data?.lastSucceededAt);
+
+  useEffect(() => {
+    const widgetState: DepartureWidgetState = tracker.isPending
+      ? initialDepartureWidgetState
+      : tracker.isError
+        ? {
+            kind: 'error',
+            updatedText: updatedMetaText,
+            title: 'Unable to load tracker',
+            message: tracker.error.message,
+          }
+        : tracker.data === null
+          ? {
+              kind: 'empty',
+              updatedText: updatedMetaText,
+              title: 'Waiting for tracker data',
+              message:
+                'Convex is connected, but the first successful refresh has not landed yet.',
+            }
+          : {
+              kind: 'ready',
+              updatedText: updatedMetaText,
+              time: tracker.data.time,
+              destination: tracker.data.destination,
+              stops: tracker.data.stops,
+              notice: tracker.data.lastError
+                ? `Showing the most recent successful result. Latest refresh failed: ${tracker.data.lastError}`
+                : undefined,
+            };
+
+    void syncDepartureWidgets(widgetState);
+  }, [
+    tracker.data,
+    tracker.data?.destination,
+    tracker.data?.lastError,
+    tracker.data?.lastSucceededAt,
+    tracker.data?.stops,
+    tracker.data?.time,
+    tracker.error?.message,
+    tracker.isError,
+    tracker.isPending,
+    updatedMetaText,
+  ]);
 
   return (
     <View style={styles.appShell}>
@@ -53,11 +107,7 @@ function AppContent() {
                 Next departure
               </Text>
               <Text selectable style={styles.updatedMeta}>
-                {tracker.isPending
-                  ? 'Connecting to Convex...'
-                  : tracker.isError
-                    ? 'Unable to read tracker data.'
-                    : formatUpdatedTime(tracker.data?.lastSucceededAt)}
+                {updatedMetaText}
               </Text>
               <Text selectable style={styles.autoRefreshMeta}>
                 Auto-refreshes every minute
