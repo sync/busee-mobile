@@ -6,6 +6,7 @@
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "ios": {
+      "appleTeamId": "3MHXZCDZWB",
       "supportsTablet": true,
       "bundleIdentifier": "com.dblechoc.busee",
       "infoPlist": {

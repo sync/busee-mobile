@@ -16,6 +16,15 @@
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "appleId": "dblechoc@gmail.com",
+        "ascAppId": "6761033818",
+        "appleTeamId": "3MHXZCDZWB"
+      },
+      "android": {
+        "releaseStatus": "draft"
+      }
+    }
   }
 }
